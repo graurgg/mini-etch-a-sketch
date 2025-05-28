@@ -48,44 +48,44 @@ int cursorY = 3; // Start at center
 // Each pattern is stored as 8 bytes (one per row), each bit represents a pixel
 uint8_t gallery[5][8] = {
   { // Original pattern 1
-    0b10000000,
-    0b00000100,
-    0b00100000,
-    0b00000000,
-    0b00000000,
-    0b00000000,
-    0b00000000,
-    0b00000000
+     0b00100100,
+    0b01011010,
+    0b10100101,
+    0b01011010,
+    0b00100100,
+    0b01011010,
+    0b10100101,
+    0b01011010
   },
   { // Original pattern 2
-    0b00000000,
-    0b00000000,
-    0b00000000,
-    0b00000000,
-    0b00000000,
-    0b00000000,
-    0b00000000,
-    0b00000000
+    0b11000011,
+    0b10100101,
+    0b01011010,
+    0b00100100,
+    0b11000011,
+    0b10100101,
+    0b01011010,
+    0b00100100
   },
   { // Flower pattern
-    0b00000000,
-    0b00000000,
-    0b00000000,
-    0b00000000,
-    0b00000000,
-    0b00000000,
-    0b00000000,
-    0b00000000
+    0b00011000,
+    0b01100110,
+    0b01011010,
+    0b10100101,
+    0b10100101,
+    0b01011010,
+    0b01100110,
+    0b00011000
   },
   { // Smiley face pattern
-    0b00000000,
-    0b00000000,
-    0b00000000,
-    0b00000000,
-    0b00000000,
-    0b00000000,
-    0b00000000,
-    0b00000000
+    0b00111100,
+    0b01000010,
+    0b10100101,
+    0b10000001,
+    0b10100101,
+    0b10011001,
+    0b01000010,
+    0b00111100
   },
   { // Empty slot for saved drawing (index 4)
     0b00000000,
@@ -127,41 +127,26 @@ void setup() {
   pinMode(SAVE_LOAD_BUTTON_PIN, INPUT_PULLUP);
   pinMode(RANDOM_BUTTON_PIN, INPUT_PULLUP);
 
-  loadGalleryFromUsb(); // Load gallery patterns from USB on startup
+  // loadGalleryFromUsb(); // Load gallery patterns from USB on startup
   // Serial.println(flashDrive.getChipVer(), HEX); // Print the CH376S chip version
 }
 
 // Modified saveGalleryToUSB function for SPI
 void saveGalleryToUSB() {
-
-  flashDrive.setFileName("test.txt"); // Set the file name for the first pattern
-  flashDrive.openFile(); 
-  flashDrive.writeChar('H'); // Write a test character to the file
-  flashDrive.writeChar('e');
-  flashDrive.writeChar('l');
-  flashDrive.writeChar('l');
-  flashDrive.writeChar('o');
-  flashDrive.writeChar(' ');
-  flashDrive.writeChar('U');
-  flashDrive.writeChar('S');
-  flashDrive.writeChar('B');
-  flashDrive.writeChar('\n'); // Newline character
-  flashDrive.closeFile(); // Close the file after writing
-
   Serial.println("Starting USB save process...");
 
-  // for (int i = 0; i < 5; i++) {
-  //   String fileName = "nPAT" + String(i);
-  //   flashDrive.setFileName(fileName.c_str());
+  for (int i = 0; i < 5; i++) {
+    String fileName = "nPAT" + String(i);
+    flashDrive.setFileName(fileName.c_str());
     
-  //   // Check if file already exists
-  //   if (flashDrive.openFile()) {
-  //     flashDrive.closeFile(); // Close the file if it exists
-  //     flashDrive.deleteFile(); // Delete the existing file
-  //     Serial.print("Deleted existing file: ");
-  //     Serial.println(fileName);
-  //   }
-  // }
+    // Check if file already exists
+    if (flashDrive.openFile()) {
+      flashDrive.closeFile(); // Close the file if it exists
+      flashDrive.deleteFile(); // Delete the existing file
+      Serial.print("Deleted existing file: ");
+      Serial.println(fileName);
+    }
+  }
 
   // Save each pattern
   for (int i = 0; i < 5; i++) {
